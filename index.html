@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The 30-Year Journey of Suzlon</title>
+    <!-- Font Imports: Proxima Nova -->
+    <link rel="stylesheet" href="https://use.typekit.net/af/9b392e/00000000000000003b9b009e/27/l?subset_id=2&fvd=n4&v=3">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
-
         :root {
             --suzlon-teal: #008280;
             --light-teal: #e0f2f1;
@@ -16,86 +16,69 @@
         html, body {
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Prevents scrolling */
-            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            /* Updated font-family to only use Proxima Nova */
+            font-family: 'Proxima Nova', sans-serif;
             height: 100%;
             width: 100%;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .slide {
             height: 100vh;
             width: 100vw;
-            display: none; /* Hide all slides by default */
+            display: none;
             flex-direction: column;
             justify-content: center;
-            align-items: flex-start; /* Aligns the content block to the left edge by default */
-            text-align: left; /* Aligns the text within the block to the left */
-            color: rgb(0, 0, 0);
+            align-items: flex-start;
+            text-align: left;
+            color: #000;
             background-size: cover;
             background-position: center center;
             position: relative;
-            padding: 0 8vw; /* Reduced horizontal margin to push content left */
+            padding: 0 8vw;
             box-sizing: border-box;
             transition: opacity 0.5s ease-in-out;
         }
+        
+        .slide.active {
+            display: flex;
+        }
 
-        /* Move content to the right for specific slides */
-        #slide-2,
-        #slide-4,
-        #slide-7,
-        #slide-8,
-        #slide-10,
-        #slide-13,
-        #slide-15,
-        #slide-16,
-        #slide-18,
-        #slide-20,
-        #slide-21,
-        #slide-23,
-        #slide-24,
-        #slide-27,
-        #slide-29,
-        #slide-31,
-        #slide-33 {
+        #slide-2, #slide-4, #slide-7, #slide-8, #slide-10, #slide-13,
+        #slide-15, #slide-16, #slide-18, #slide-20, #slide-21, #slide-23,
+        #slide-24, #slide-27, #slide-29, #slide-31, #slide-33 {
             align-items: flex-end;
         }
-
-        .slide.active {
-            display: flex; /* Show the active slide */
-        }
         
-        /* Dark overlay for text readability on all slides */
         .slide::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /* background: rgba(0, 0, 0, 0.6); */
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.3), transparent 50%, rgba(0,0,0,0.3));
             z-index: 1;
         }
 
         .slide-content {
             position: relative;
             z-index: 2;
-            max-width: 650px; /* Reduced max-width */
+            max-width: 650px;
         }
         
-        /* Adjust content width for timeline slides for better text flow */
-        .slide:not(#slide-0) .slide-content {
-            max-width: 550px; /* Reduced max-width for timeline slides */
-        }
-        
-        .suzlon-logo-hero {
-            width: clamp(200px, 30vw, 300px);
-            margin-bottom: 1.5rem;
-        }
+        .slide:not(#slide-0) .slide-content { max-width: 550px; }
         
         .slide h1 {
             font-size: clamp(2.5rem, 5vw, 4rem);
             margin: 0;
             font-weight: 700;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
         }
         
         .hero-button {
@@ -112,23 +95,32 @@
             border: none;
             font-size: 1rem;
         }
-        
         .hero-button:hover {
             background-color: #006665;
             transform: scale(1.05);
         }
 
+        .slide.active .slide-year,
+        .slide.active h3,
+        .slide.active p {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        .slide.active h3 { animation-delay: 0.2s; }
+        .slide.active p { animation-delay: 0.4s; }
+
         .slide-year {
             font-size: clamp(3rem, 10vw, 6rem);
-            font-weight: 700;
+            font-weight: 900;
             color: #008280;
-            /* opacity: 0.5; */
+            -webkit-text-stroke: 1px white;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
             margin-bottom: 1rem;
         }
         
         .slide h3 {
             font-size: clamp(1.5rem, 4vw, 2.2rem);
-            color: rgb(0, 0, 0);
+            color: #000;
             margin: 0 0 1rem 0;
             font-weight: 700;
         }
@@ -137,14 +129,12 @@
             font-size: clamp(1rem, 2vw, 1.2rem);
             line-height: 1.7;
             margin: 0;
-            font-weight: 300;
+            font-weight: 400;
         }
         
-        /* --- Top Navigation Bar --- */
         .top-nav {
             position: fixed;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             width: 100%;
             z-index: 1001;
             display: flex;
@@ -154,95 +144,72 @@
             box-sizing: border-box;
             transition: background-color 0.3s ease;
         }
-        
         .top-nav.nav-dark-bg {
-             /* background-color: rgba(0, 0, 0, 0.5); */
-             backdrop-filter: blur(5px);
+             /* background-color: rgba(255, 255, 255, 0.1); */
+             backdrop-filter: blur(8px);
         }
-
-        .nav-logo {
-            height: 35px;
-        }
-        
-        .nav-links {
-            display: flex;
-            align-items: center;
-        }
-
-        .top-nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
+        .nav-logo { height: 35px; }
+        .nav-links { display: flex; align-items: center; }
+        .top-nav ul { list-style: none; margin: 0; padding: 0; display: flex; }
         .top-nav li a {
-            color: rgb(0, 0, 0);
+            color: #000;
             text-decoration: none;
-            padding: 8px 12px;
-            margin: 0 5px;
+            padding: 8px 12px; margin: 0 5px;
             font-weight: 400;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: color 0.3s ease;
             border-radius: 5px;
             font-size: clamp(0.7rem, 1.5vw, 0.9rem);
         }
-
-       
+        .top-nav.nav-dark-bg li a { color: rgb(0, 0, 0);  }
+        .top-nav li a.active-section { font-weight: 0; text-decoration: underline; }
+        .hamburger-menu { display: none; }
         
-        /* Style for the currently active section in the top nav */
-        .top-nav li a.active-section {
-            font-weight: 700;
-            text-decoration: underline;
-        }
-
-        .home-icon-link {
-            margin-left: 20px;
-        }
-        
-        /* --- Footer --- */
         .slide-footer {
             position: fixed;
-            bottom: 0;
-            left: 0;
+            bottom: 0; left: 0;
             width: 100%;
+            z-index: 1000;
+        }
+        .footer-controls {
             height: 80px;
             background-color: var(--suzlon-teal);
-            z-index: 1000;
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 40px;
             box-sizing: border-box;
         }
-
-        /* --- Navigation Buttons in Footer --- */
+        .progress-bar-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        #progressBar {
+            width: 0%;
+            height: 100%;
+            background-color: white;
+            transition: width 0.4s ease-out;
+        }
         .nav-button {
             background-color: rgba(255, 255, 255, 0.2);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 50px; height: 50px;
             font-size: 1.5rem;
             cursor: pointer;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            justify-content: center; align-items: center;
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
-
         .nav-button:hover {
             background-color: rgba(255, 255, 255, 0.4);
             transform: scale(1.1);
         }
+        .hidden { display: none; }
         
-        .hidden {
-            display: none;
-        }
-        
-        /* --- Individual Background Images --- */
         #slide-0 { background-image: url('/Picture2.jpg'); }
         #slide-1 { background-image: url('/19952.jpg'); }
         #slide-2 { background-image: url('/1996.jpg'); }
@@ -279,6 +246,40 @@
         #slide-33 { background-image: url('/2024.jpg'); }
         #slide-34 { background-image: url('/2025.jpg'); }
 
+        @media (max-width: 768px) {
+            .slide { padding: 0 5vw; align-items: center; text-align: center; }
+            #slide-2, #slide-4, #slide-7, #slide-8, #slide-10, #slide-13,
+            #slide-15, #slide-16, #slide-18, #slide-20, #slide-21, #slide-23,
+            #slide-24, #slide-27, #slide-29, #slide-31, #slide-33 {
+                align-items: center;
+            }
+            .slide-content { max-width: 90%; }
+            .hamburger-menu { display: block; cursor: pointer; z-index: 1002; }
+            .hamburger-menu .bar {
+                display: block; width: 25px; height: 3px;
+                margin: 5px auto;
+                background-color: #000;
+                transition: all 0.3s ease-in-out;
+            }
+            .top-nav.nav-dark-bg .hamburger-menu .bar { background-color: white; }
+            .nav-links {
+                position: fixed; left: -100%; top: 0;
+                width: 100%; height: 100vh;
+                background-color: rgba(0, 130, 128, 0.95);
+                backdrop-filter: blur(10px);
+                transition: 0.3s;
+                display: flex; justify-content: center; align-items: center;
+            }
+            .nav-links.active { left: 0; }
+            .top-nav ul { flex-direction: column; align-items: center; }
+            .top-nav li a { color: white; font-size: 1.5rem; margin: 1.5rem 0; }
+            .nav-links.active + .hamburger-menu .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); background-color: white; }
+            .nav-links.active + .hamburger-menu .bar:nth-child(2) { opacity: 0; }
+            .nav-links.active + .hamburger-menu .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); background-color: white; }
+            .nav-links.active + .hamburger-menu { position: fixed; right: 40px; }
+            .footer-controls { height: 70px; padding: 0 20px; }
+            .nav-button { width: 45px; height: 45px; font-size: 1.2rem; }
+        }
     </style>
 </head>
 <body>
@@ -287,7 +288,7 @@
         <a href="#" data-slide-index="0">
              <img src="/logo.png" alt="Suzlon Logo" class="nav-logo">
         </a>
-        <div class="nav-links">
+        <div class="nav-links" id="navLinks">
             <ul>
                 <li><a href="#" data-slide-index="1">1995-1999</a></li>
                 <li><a href="#" data-slide-index="4">2000-2004</a></li>
@@ -297,7 +298,9 @@
                 <li><a href="#" data-slide-index="29">2020-2024</a></li>
                 <li><a href="#" data-slide-index="34">2025 onwards</a></li>
             </ul>
-            
+        </div>
+        <div class="hamburger-menu" id="hamburgerMenu">
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span>
         </div>
     </nav>
     
@@ -305,259 +308,54 @@
         <!-- Slide 0: Hero -->
         <section class="slide active" id="slide-0">
             <div class="slide-content">
-                
-                <!-- <h1>India's Most </br> Trusted Winds</h1> -->
-                 <h1 style="color: #008280;">India's Most <br> Trusted Winds</h1>
+                <h1>India's Most <br> Trusted Winds</h1>
                 <button class="hero-button" id="startBtn">START THE JOURNEY</button>
             </div>
         </section>
 
         <!-- Timeline Slides -->
-        <section class="slide" id="slide-1">
-            <div class="slide-content">
-                <div class="slide-year">1995</div>
-                <h3>Formation of Suzlon Energy Limited</h3>
-                <p>India's first renewable energy company was born from one man’s conviction that progress and the planet can go together.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-2">
-            <div class="slide-content">
-                <div class="slide-year">1996</div>
-                <h3>First 0.27 MW wind turbine commissioned</h3>
-                <p>Suzlon got its first order from PSU giant – IPCL, with the first wind turbine being installed at Dhank, Gujarat.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-3">
-            <div class="slide-content">
-                <div class="slide-year">1997</div>
-                <h3>First wind energy manufacturing facility</h3>
-                <p>India’s Aatmanirbhar journey in wind began with Suzlon’s first turbine manufacturing facility at Daman, with only 800 MW annual capacity.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-4">
-            <div class="slide-content">
-                <div class="slide-year">2000</div>
-                <h3>First private sector project</h3>
-                <p>India Inc. bought into the promise of wind energy when Suzlon won Tata Finance’s turnkey wind farm project to reduce its power costs and carbon footprint alike.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-5">
-            <div class="slide-content">
-                <div class="slide-year">2001</div>
-                <h3>First 1 MW wind turbine commissioned</h3>
-                <p>Suzlon installed India’s first, game-changing megawatt-class wind turbine at Vankusawade, Satara, for Niskalp Investments, elevating the renewables game in India from kilowatts to megawatts.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-6">
-            <div class="slide-content">
-                <div class="slide-year">2001</div>
-                <h3>AE Rotor Holding BV, Netherlands, established</h3>
-                <p>Suzlon established its first office on foreign soil with a rotor technology setup in the Netherlands, marking Suzlon’s endeavour to harness the best global minds.</p>
-            </div>
-        </section>
-         <section class="slide" id="slide-7">
-            <div class="slide-content">
-                <div class="slide-year">2002</div>
-                <h3>India made its first blades in India</h3>
-                <p>Crafted locally in Daman, India’s first-ever wind turbine blades – Suzlon’s S60 marked a breakthrough in homegrown wind tech and manufacturing, paving the way for more jobs, local capacity, and a new wind economy.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-8">
-            <div class="slide-content">
-                <div class="slide-year">2002 - 2005</div>
-                <h3>Expanding across continents</h3>
-                <p>With technology widely accepted, business models that were customer centric, and Indian ingenuity, Suzlon rapidly entered markets across continents, often featuring among the top 3 in each geography.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-9">
-            <div class="slide-content">
-                <div class="slide-year">2003</div>
-                <h3>Suzlon enters the U.S. market</h3>
-                <p>India's first wind energy deliveries to the U.S. started with Suzlon’s first order there. It also flagged off the journey of Indian wind energy exports to the world – the start of a global company in the making.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-10">
-            <div class="slide-content">
-                <div class="slide-year">2003</div>
-                <h3>Asia's largest wind farm in Maharashtra</h3>
-                <p>Suzlon set global benchmarks by building Asia’s largest wind farm at Vankusawade, Maharashtra – going from single turbines to utility scale windfarms.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-11">
-            <div class="slide-content">
-                <div class="slide-year">2004</div>
-                <h3>Introducing China to wind manufacturing</h3>
-                <p>Suzlon established China’s first wind energy manufacturing facility in Tianjin at a time when the country only imported wind turbines, bringing affordable clean energy solutions to millions.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-12">
-            <div class="slide-content">
-                <div class="slide-year">2005</div>
-                <h3>India’s first-ever renewable energy IPO</h3>
-                <p>Suzlon brought wind to every Indian through its public listing. The ‘IPO of the year’ was oversubscribed by 15x on Day 1.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-13">
-            <div class="slide-content">
-                <div class="slide-year">2005</div>
-                <h3>Suzlon ranked 9th globally by BTM Report</h3>
-                <p>Suzlon became the first and only Indian wind company to enter the global top ten, proving homegrown wind technology could compete and lead worldwide.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-14">
-            <div class="slide-content">
-                <div class="slide-year">2005</div>
-                <h3>First 2 MW turbine commissioned</h3>
-                <p>Suzlon dedicated India's largest turbine at the time to the nation on Independence Day, symbolising freedom from fossil fuels and a new kind of power.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-15">
-            <div class="slide-content">
-                <div class="slide-year">2005</div>
-                <h3>1,000 MW milestone crossed</h3>
-                <p>What began as a cottage industry matured into an established sector with Suzlon’s 1,000 MW milestone, marking a new phase of a self-reliant India.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-16">
-            <div class="slide-content">
-                <div class="slide-year">2006</div>
-                <h3>Hansen Transmissions acquired</h3>
-                <p>In India’s second-largest foreign acquisition, Belgium’s Hansen Transmissions became part of the Suzlon family, solving a global gearbox shortage.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-17">
-            <div class="slide-content">
-                <div class="slide-year">2006</div>
-                <h3>Ranked fifth WTG manufacturer globally</h3>
-                <p>As Suzlon grew from strength to strength, India, too, rose in global recognition, proving that world-class wind technology could be imagined, built, and exported from India.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-18">
-            <div class="slide-content">
-                <div class="slide-year">2007</div>
-                <h3>SE Forge Limited formed</h3>
-                <p>Suzlon established India’s first dedicated foundries for wind energy at Coimbatore and Vadodara, taking another step in ‘self-reliance’.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-19">
-            <div class="slide-content">
-                <div class="slide-year">2007</div>
-                <h3>Asia's first blade testing facility established</h3>
-                <p>India became the only country after the Netherlands and the USA to qualify and certify wind tech as per international standards.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-20">
-            <div class="slide-content">
-                <div class="slide-year">2007</div>
-                <h3>First wind energy company to receive FDI</h3>
-                <p>A 40 MW project from British Petroleum made Suzlon the only Indian manufacturer to attract Foreign Direct Investment into the wind energy sector.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-21">
-            <div class="slide-content">
-                <div class="slide-year">2008</div>
-                <h3>Harvard Business School case study</h3>
-                <p>Harvard Business School wrote “The Suzlon Edge,” a case study that analysed Suzlon’s bold strategies and rapid rise.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-22">
-            <div class="slide-content">
-                <div class="slide-year">2009</div>
-                <h3>Suzlon and TERI University sign an MoU</h3>
-                <p>Suzlon introduced the very first M. Tech in Renewable Energy to nurture young talent into innovators for the nation’s tomorrow.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-23">
-            <div class="slide-content">
-                <div class="slide-year">2010</div>
-                <h3>Ranked third WTG manufacturer globally</h3>
-                <p>Suzlon became the first and only Indian wind energy company to reach the global top three, proving that scale, technology, and vision can rise from Indian soil.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-24">
-            <div class="slide-content">
-                <div class="slide-year">2010</div>
-                <h3>Among the world’s greenest HQ</h3>
-                <p>The nation became home to one of the world’s greenest corporate campuses, Suzlon One Earth in Pune, a physical form of Suzlon's sustainable vision.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-25">
-            <div class="slide-content">
-                <div class="slide-year">2014</div>
-                <h3>Asia's largest wind park in Gujarat</h3>
-                <p>At 1,100 MW, the Kutch Wind Park emerged as one of India’s largest symbol of hope and scale in the fight against climate change.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-26">
-            <div class="slide-content">
-                <div class="slide-year">2014</div>
-                <h3>India’s first Hybrid Lattice Tower introduced</h3>
-                <p>At 120 metres, Suzlon’s hybrid lattice–tubular tower at Jamanwada reached higher to tap stronger winds, boost output, and expand wind’s reach.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-27">
-            <div class="slide-content">
-                <div class="slide-year">2017</div>
-                <h3>11 GW milestone achieved</h3>
-                <p>More wind energy for more cities, industries, and homes, improving lives and strengthening India's clean energy leadership.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-28">
-            <div class="slide-content">
-                <div class="slide-year">2018</div>
-                <h3>Suzlon’s largest WTG, S128, commissioned</h3>
-                <p>At 140m hub height, Suzlon launched ️India's largest wind turbine generator ever at the time, redefining efficiency in clean energy generation.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-29">
-            <div class="slide-content">
-                <div class="slide-year">2020</div>
-                <h3>Restructuring for growth</h3>
-                <p>Suzlon restructured its debt and business models, and combined with a ₹1,200 crore Rights Issue, it enabled the company to take on the future from a position of strength.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-30">
-            <div class="slide-content">
-                <div class="slide-year">2022-23</div>
-                <h3>Debt-free and positioned to lead</h3>
-                <p>Investors rallied behind Suzlon’s turnaround, which made Suzlon net debt-free, unlocking greater value for stakeholders.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-31">
-            <div class="slide-content">
-                <div class="slide-year">2023</div>
-                <h3>20 GW installed worldwide</h3>
-                <p>As Suzlon became the only Indian company to install over 20 GW across 17 countries, Indian wind energy made its mark with global trust and respect.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-32">
-            <div class="slide-content">
-                <div class="slide-year">2023</div>
-                <h3>S144, Suzlon’s 3 MW platform launched</h3>
-                <p>A new generation of turbines, built for India's diverse weather conditions, delivers more low-cost power and care to nature.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-33">
-            <div class="slide-content">
-                <div class="slide-year">2024</div>
-                <h3>Safeguarding India’s renewable assets</h3>
-                <p>Committed to protecting the nation's smaller wind energy assets, Suzlon acquired India’s largest multi-brand OMS provider, Renom Energy Services.</p>
-            </div>
-        </section>
-        <section class="slide" id="slide-34">
-            <div class="slide-content">
-                <div class="slide-year">2025</div>
-                <h3>Best Year in a Decade</h3>
-                <p>Suzlon’s transformation led to its best performance in 10 years, with a record 5.6 GW order book, stronger deliveries, and record-high revenue and profits.</p>
-            </div>
-        </section>
-
+        <section class="slide" id="slide-1"><div class="slide-content"><div class="slide-year">1995</div><h3>Formation of Suzlon Energy Limited</h3><p>India's first renewable energy company was born from one man’s conviction that progress and the planet can go together.</p></div></section>
+        <section class="slide" id="slide-2"><div class="slide-content"><div class="slide-year">1996</div><h3>First 0.27 MW wind turbine commissioned</h3><p>Suzlon got its first order from PSU giant – IPCL, with the first wind turbine being installed at Dhank, Gujarat.</p></div></section>
+        <section class="slide" id="slide-3"><div class="slide-content"><div class="slide-year">1997</div><h3>First wind energy manufacturing facility</h3><p>India’s Aatmanirbhar journey in wind began with Suzlon’s first turbine manufacturing facility at Daman, with only 800 MW annual capacity.</p></div></section>
+        <section class="slide" id="slide-4"><div class="slide-content"><div class="slide-year">2000</div><h3>First private sector project</h3><p>India Inc. bought into the promise of wind energy when Suzlon won Tata Finance’s turnkey wind farm project to reduce its power costs and carbon footprint alike.</p></div></section>
+        <section class="slide" id="slide-5"><div class="slide-content"><div class="slide-year">2001</div><h3>First 1 MW wind turbine commissioned</h3><p>Suzlon installed India’s first, game-changing megawatt-class wind turbine at Vankusawade, Satara, for Niskalp Investments, elevating the renewables game in India from kilowatts to megawatts.</p></div></section>
+        <section class="slide" id="slide-6"><div class="slide-content"><div class="slide-year">2001</div><h3>AE Rotor Holding BV, Netherlands, established</h3><p>Suzlon established its first office on foreign soil with a rotor technology setup in the Netherlands, marking Suzlon’s endeavour to harness the best global minds.</p></div></section>
+        <section class="slide" id="slide-7"><div class="slide-content"><div class="slide-year">2002</div><h3>India made its first blades in India</h3><p>Crafted locally in Daman, India’s first-ever wind turbine blades – Suzlon’s S60 marked a breakthrough in homegrown wind tech and manufacturing, paving the way for more jobs, local capacity, and a new wind economy.</p></div></section>
+        <section class="slide" id="slide-8"><div class="slide-content"><div class="slide-year">2002 - 2005</div><h3>Expanding across continents</h3><p>With technology widely accepted, business models that were customer centric, and Indian ingenuity, Suzlon rapidly entered markets across continents, often featuring among the top 3 in each geography.</p></div></section>
+        <section class="slide" id="slide-9"><div class="slide-content"><div class="slide-year">2003</div><h3>Suzlon enters the U.S. market</h3><p>India's first wind energy deliveries to the U.S. started with Suzlon’s first order there. It also flagged off the journey of Indian wind energy exports to the world – the start of a global company in the making.</p></div></section>
+        <section class="slide" id="slide-10"><div class="slide-content"><div class="slide-year">2003</div><h3>Asia's largest wind farm in Maharashtra</h3><p>Suzlon set global benchmarks by building Asia’s largest wind farm at Vankusawade, Maharashtra – going from single turbines to utility scale windfarms.</p></div></section>
+        <section class="slide" id="slide-11"><div class="slide-content"><div class="slide-year">2004</div><h3>Introducing China to wind manufacturing</h3><p>Suzlon established China’s first wind energy manufacturing facility in Tianjin at a time when the country only imported wind turbines, bringing affordable clean energy solutions to millions.</p></div></section>
+        <section class="slide" id="slide-12"><div class="slide-content"><div class="slide-year">2005</div><h3>India’s first-ever renewable energy IPO</h3><p>Suzlon brought wind to every Indian through its public listing. The ‘IPO of the year’ was oversubscribed by 15x on Day 1.</p></div></section>
+        <section class="slide" id="slide-13"><div class="slide-content"><div class="slide-year">2005</div><h3>Suzlon ranked 9th globally by BTM Report</h3><p>Suzlon became the first and only Indian wind company to enter the global top ten, proving homegrown wind technology could compete and lead worldwide.</p></div></section>
+        <section class="slide" id="slide-14"><div class="slide-content"><div class="slide-year">2005</div><h3>First 2 MW turbine commissioned</h3><p>Suzlon dedicated India's largest turbine at the time to the nation on Independence Day, symbolising freedom from fossil fuels and a new kind of power.</p></div></section>
+        <section class="slide" id="slide-15"><div class="slide-content"><div class="slide-year">2005</div><h3>1,000 MW milestone crossed</h3><p>What began as a cottage industry matured into an established sector with Suzlon’s 1,000 MW milestone, marking a new phase of a self-reliant India.</p></div></section>
+        <section class="slide" id="slide-16"><div class="slide-content"><div class="slide-year">2006</div><h3>Hansen Transmissions acquired</h3><p>In India’s second-largest foreign acquisition, Belgium’s Hansen Transmissions became part of the Suzlon family, solving a global gearbox shortage.</p></div></section>
+        <section class="slide" id="slide-17"><div class="slide-content"><div class="slide-year">2006</div><h3>Ranked fifth WTG manufacturer globally</h3><p>As Suzlon grew from strength to strength, India, too, rose in global recognition, proving that world-class wind technology could be imagined, built, and exported from India.</p></div></section>
+        <section class="slide" id="slide-18"><div class="slide-content"><div class="slide-year">2007</div><h3>SE Forge Limited formed</h3><p>Suzlon established India’s first dedicated foundries for wind energy at Coimbatore and Vadodara, taking another step in ‘self-reliance’.</p></div></section>
+        <section class="slide" id="slide-19"><div class="slide-content"><div class="slide-year">2007</div><h3>Asia's first blade testing facility established</h3><p>India became the only country after the Netherlands and the USA to qualify and certify wind tech as per international standards.</p></div></section>
+        <section class="slide" id="slide-20"><div class="slide-content"><div class="slide-year">2007</div><h3>First wind energy company to receive FDI</h3><p>A 40 MW project from British Petroleum made Suzlon the only Indian manufacturer to attract Foreign Direct Investment into the wind energy sector.</p></div></section>
+        <section class="slide" id="slide-21"><div class="slide-content"><div class="slide-year">2008</div><h3>Harvard Business School case study</h3><p>Harvard Business School wrote “The Suzlon Edge,” a case study that analysed Suzlon’s bold strategies and rapid rise.</p></div></section>
+        <section class="slide" id="slide-22"><div class="slide-content"><div class="slide-year">2009</div><h3>Suzlon and TERI University sign an MoU</h3><p>Suzlon introduced the very first M. Tech in Renewable Energy to nurture young talent into innovators for the nation’s tomorrow.</p></div></section>
+        <section class="slide" id="slide-23"><div class="slide-content"><div class="slide-year">2010</div><h3>Ranked third WTG manufacturer globally</h3><p>Suzlon became the first and only Indian wind energy company to reach the global top three, proving that scale, technology, and vision can rise from Indian soil.</p></div></section>
+        <section class="slide" id="slide-24"><div class="slide-content"><div class="slide-year">2010</div><h3>Among the world’s greenest HQ</h3><p>The nation became home to one of the world’s greenest corporate campuses, Suzlon One Earth in Pune, a physical form of Suzlon's sustainable vision.</p></div></section>
+        <section class="slide" id="slide-25"><div class="slide-content"><div class="slide-year">2014</div><h3>Asia's largest wind park in Gujarat</h3><p>At 1,100 MW, the Kutch Wind Park emerged as one of India’s largest symbol of hope and scale in the fight against climate change.</p></div></section>
+        <section class="slide" id="slide-26"><div class="slide-content"><div class="slide-year">2014</div><h3>India’s first Hybrid Lattice Tower introduced</h3><p>At 120 metres, Suzlon’s hybrid lattice–tubular tower at Jamanwada reached higher to tap stronger winds, boost output, and expand wind’s reach.</p></div></section>
+        <section class="slide" id="slide-27"><div class="slide-content"><div class="slide-year">2017</div><h3>11 GW milestone achieved</h3><p>More wind energy for more cities, industries, and homes, improving lives and strengthening India's clean energy leadership.</p></div></section>
+        <section class="slide" id="slide-28"><div class="slide-content"><div class="slide-year">2018</div><h3>Suzlon’s largest WTG, S128, commissioned</h3><p>At 140m hub height, Suzlon launched ️India's largest wind turbine generator ever at the time, redefining efficiency in clean energy generation.</p></div></section>
+        <section class="slide" id="slide-29"><div class="slide-content"><div class="slide-year">2020</div><h3>Restructuring for growth</h3><p>Suzlon restructured its debt and business models, and combined with a ₹1,200 crore Rights Issue, it enabled the company to take on the future from a position of strength.</p></div></section>
+        <section class="slide" id="slide-30"><div class="slide-content"><div class="slide-year">2022-23</div><h3>Debt-free and positioned to lead</h3><p>Investors rallied behind Suzlon’s turnaround, which made Suzlon net debt-free, unlocking greater value for stakeholders.</p></div></section>
+        <section class="slide" id="slide-31"><div class="slide-content"><div class="slide-year">2023</div><h3>20 GW installed worldwide</h3><p>As Suzlon became the only Indian company to install over 20 GW across 17 countries, Indian wind energy made its mark with global trust and respect.</p></div></section>
+        <section class="slide" id="slide-32"><div class="slide-content"><div class="slide-year">2023</div><h3>S144, Suzlon’s 3 MW platform launched</h3><p>A new generation of turbines, built for India's diverse weather conditions, delivers more low-cost power and care to nature.</p></div></section>
+        <section class="slide" id="slide-33"><div class="slide-content"><div class="slide-year">2024</div><h3>Safeguarding India’s renewable assets</h3><p>Committed to protecting the nation's smaller wind energy assets, Suzlon acquired India’s largest multi-brand OMS provider, Renom Energy Services.</p></div></section>
+        <section class="slide" id="slide-34"><div class="slide-content"><div class="slide-year">2025</div><h3>Best Year in a Decade</h3><p>Suzlon’s transformation led to its best performance in 10 years, with a record 5.6 GW order book, stronger deliveries, and record-high revenue and profits.</p></div></section>
     </div>
 
-    <!-- Navigation Controls -->
     <footer class="slide-footer">
-        <button id="prevBtn" class="nav-button hidden">&#10094;</button>
-        <button id="nextBtn" class="nav-button">&#10095;</button>
+        <div class="progress-bar-container"><div id="progressBar"></div></div>
+        <div class="footer-controls">
+            <button id="prevBtn" class="nav-button hidden">&#10094;</button>
+            <button id="nextBtn" class="nav-button">&#10095;</button>
+        </div>
     </footer>
 
     <script>
@@ -567,27 +365,27 @@
             const prevBtn = document.getElementById('prevBtn');
             const startBtn = document.getElementById('startBtn');
             const topNav = document.getElementById('topNav');
-            const topNavLinks = document.querySelectorAll('.top-nav a');
-            
+            const allNavLinks = document.querySelectorAll('.top-nav a');
+            const topNavSectionLinks = document.querySelectorAll('.top-nav .nav-links ul a');
+            const hamburgerMenu = document.getElementById('hamburgerMenu');
+            const navLinksContainer = document.getElementById('navLinks');
+            const progressBar = document.getElementById('progressBar');
+
             let currentSlide = 0;
             const totalSlides = slides.length;
             const sectionStartSlides = [0, 1, 4, 12, 23, 27, 29, 34];
-            const topNavSectionLinks = document.querySelectorAll('.top-nav .nav-links ul a');
 
             function updateTopNav(index) {
                 topNavSectionLinks.forEach(link => link.classList.remove('active-section'));
                 if (index > 0) {
                     let currentSectionIndex = -1;
-                    // Find which section the current slide belongs to
-                    for (let i = sectionStartSlides.length - 1; i >= 1; i--) { // Start from 1 to skip 'Home'
+                    for (let i = sectionStartSlides.length - 1; i >= 1; i--) {
                         if (index >= sectionStartSlides[i]) {
-                            currentSectionIndex = i;
-                            break;
+                            currentSectionIndex = i; break;
                         }
                     }
-                     // The nav links correspond to indices 1 through 7 of the sectionStartSlides array
                     if (currentSectionIndex !== -1) {
-                       topNavSectionLinks[currentSectionIndex - 1].classList.add('active-section');
+                        topNavSectionLinks[currentSectionIndex - 1].classList.add('active-section');
                     }
                 }
             }
@@ -597,57 +395,40 @@
                     slide.classList.toggle('active', i === index);
                 });
                 
-                // Update button visibility
                 prevBtn.classList.toggle('hidden', index === 0);
-                nextBtn.classList.toggle('hidden', index === totalSlides - 1 || index === 0);
-                
-                // Logic for top nav background
+                nextBtn.classList.toggle('hidden', index >= totalSlides - 1 || index === 0);
                 topNav.classList.toggle('nav-dark-bg', index > 0);
                 
+                const progress = index > 0 ? (index / (totalSlides - 1)) * 100 : 0;
+                progressBar.style.width = `${progress}%`;
+
                 updateTopNav(index);
             }
 
-            function nextSlide() {
-                if (currentSlide < totalSlides - 1) {
-                    currentSlide++;
-                    showSlide(currentSlide);
-                }
-            }
-
-            function prevSlide() {
-                if (currentSlide > 0) {
-                    currentSlide--;
-                    showSlide(currentSlide);
-                }
-            }
-
-            // Event Listeners
+            function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; showSlide(currentSlide); } }
+            function prevSlide() { if (currentSlide > 0) { currentSlide--; showSlide(currentSlide); } }
+            
             nextBtn.addEventListener('click', nextSlide);
             prevBtn.addEventListener('click', prevSlide);
             startBtn.addEventListener('click', nextSlide);
+            
+            hamburgerMenu.addEventListener('click', () => navLinksContainer.classList.toggle('active'));
 
-            topNavLinks.forEach(link => {
+            allNavLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const slideIndex = parseInt(link.getAttribute('data-slide-index'), 10);
-                    currentSlide = slideIndex;
+                    currentSlide = parseInt(link.getAttribute('data-slide-index'), 10);
                     showSlide(currentSlide);
+                    navLinksContainer.classList.remove('active');
                 });
             });
 
-            // Keyboard navigation
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowRight') {
-                    nextSlide();
-                } else if (e.key === 'ArrowLeft') {
-                    prevSlide();
-                } else if (e.key === 'Home') {
-                    currentSlide = 0;
-                    showSlide(currentSlide);
-                }
+                if (e.key === 'ArrowRight') nextSlide();
+                else if (e.key === 'ArrowLeft') prevSlide();
+                else if (e.key === 'Home') { currentSlide = 0; showSlide(currentSlide); }
             });
 
-            // Initial state
             showSlide(currentSlide);
         });
     </script>
